@@ -5,12 +5,12 @@ import java.io.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
-public class HelloServlet extends HttpServlet {
+@WebServlet(name = "history", value = "/history")
+public class history extends HttpServlet {
     private String message;
 
     public void init() {
-        message = "Hello World!";
+        message = "위치 히스토리 목록";
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

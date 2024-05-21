@@ -5,12 +5,12 @@ import java.io.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
-public class HelloServlet extends HttpServlet {
+@WebServlet(name = "info", value = "/info")
+public class info extends HttpServlet {
     private String message;
 
     public void init() {
-        message = "Hello World!";
+        message = "와이파이 정보 가져오기";
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
