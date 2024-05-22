@@ -1,16 +1,17 @@
 package com.example.wifi;
 
 import java.io.*;
+import java.sql.*;
 
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "info", value = "/info")
-public class info extends HttpServlet {
+@WebServlet(name = "history", value = "/history")
+public class History extends HttpServlet {
     private String message;
 
     public void init() {
-        message = "와이파이 정보 가져오기";
+        message = "위치 히스토리 목록";
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

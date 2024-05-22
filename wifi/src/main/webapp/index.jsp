@@ -15,7 +15,7 @@
 <br/>
 <br/>
 
-<p>LAT :  <input id="lat"></input> , LNT : <input id="lnt"></input> <button onclick="btnClick()"> 내 위치 가져오기</button> </p>
+<p>LAT :  <input id="lat"></input>  , LNT : <input id="lnt"></input><button onclick="btnClick()"> 내 위치 가져오기</button> </p>
 <input type="submit" value="근처 WIPI 정보 보기">
 
 <script>
