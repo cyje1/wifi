@@ -9,7 +9,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 
-public class getWifiInformation {
+public class getWifiInfo {
     private static String URL = "http://openapi.seoul.go.kr:8088/594e497a7a636b6437357441645668/json/TbPublicWifiInfo/";
 
     public static int getTotalCount() throws IOException {
@@ -36,9 +36,10 @@ public class getWifiInformation {
     }
 
     public static void getWifiData() throws IOException {
-        int count = getTotalCount();
+//        int count = getTotalCount();
+        int count = 100;
         int start = 1;
-        int end = 1000;
+        int end = 100;
 
         OkHttpClient client = new OkHttpClient();
 
@@ -54,6 +55,9 @@ public class getWifiInformation {
                     JsonArray jsonArray = jsonElement.getAsJsonObject().get("TbPublicWifiInfo")
                             .getAsJsonObject().get("row")
                             .getAsJsonArray();
+
+                    SaveInfo saveInfo = new SaveInfo();
+                    saveInfo.dbInsert(jsonArray);
                 }
 
                 if (end == count) {

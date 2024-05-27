@@ -1,3 +1,6 @@
+<%@ page import="com.example.wifi.SaveInfo" %>
+<%@ page import="com.example.wifi.WifiDto" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -84,31 +87,33 @@
                 </tr>
             </thead>
             <tbody>
-                    <%
-                        int a = 1;
+                    <%  SaveInfo saveInfo = new SaveInfo();
+                        List<WifiDto> list = saveInfo.dbSelect();
 
-                        if (a == 0) {
+                        if (list.size() > 0) {
+                            for (int i = 0; i < list.size(); i++) {
                     %>
                 <tr>
-                    <td> 1 </td>
-                    <td> 2 </td>
-                    <td> 3 </td>
-                    <td> 4 </td>
-                    <td> 5 </td>
-                    <td> 6 </td>
-                    <td> 7 </td>
-                    <td> 8 </td>
-                    <td> 9 </td>
-                    <td> 0 </td>
-                    <td> 1 </td>
-                    <td> 2 </td>
-                    <td> 3 </td>
-                    <td> 4 </td>
-                    <td> 5 </td>
-                    <td> 6 </td>
-                    <td> 7 </td>
+                    <td> 거리 구해서 넣기 </td>
+                    <td> <%= list.get(i).getNo() %> </td>
+                    <td> <%= list.get(i).getGu() %>  </td>
+                    <td> <%= list.get(i).getName() %>  </td>
+                    <td> <%= list.get(i).getAddress() %> </td>
+                    <td> <%= list.get(i).getDetailAddress() %> </td>
+                    <td> <%= list.get(i).getFloors() %> </td>
+                    <td> <%= list.get(i).getInstallType() %> </td>
+                    <td> <%= list.get(i).getOrganization() %> </td>
+                    <td> <%= list.get(i).getService() %> </td>
+                    <td> <%= list.get(i).getWifiType() %> </td>
+                    <td> <%= list.get(i).getInstalledYear() %> </td>
+                    <td> <%= list.get(i).getInOut() %> </td>
+                    <td> <%= list.get(i).getEnviron() %> </td>
+                    <td> <%= list.get(i).getY() %> </td>
+                    <td> <%= list.get(i).getX() %> </td>
+                    <td> <%= list.get(i).getInstallDate() %> </td>
                 </tr>
-                    <% } else { %>
+                    <% }
+                        } else { %>
                     <td colspan="20">
                         <br/>
                         위치 정보를 입력한 후에 조회해 주세요.
