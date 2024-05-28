@@ -37,9 +37,9 @@ public class getWifiInfo {
 
     public static void getWifiData() throws IOException {
 //        int count = getTotalCount();
-        int count = 100;
+        int count = 10;
         int start = 1;
-        int end = 100;
+        int end = 10;
 
         OkHttpClient client = new OkHttpClient();
 

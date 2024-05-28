@@ -111,20 +111,15 @@ public class SaveInfo {
             connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
 
             // preparedStatement 객체 생성
-            String sql
-                    = "select *, " +
-                    "(6371 * acos( cos( radians( ? ) ) * cos( radians(" + lat +" ) ) * cos( radians(" + lnt + ") - radians( ? ) ) + " +
-                    "sin( radians( ? ) ) * sin( radians(" + lat + ") ) ) ) AS DISTANCE " +
+            String sql = "select *, round(ST_DISTANCE(" +
+                    " point( Y , X ), " +
+                    " point(" + lat + ", " + lnt + ") " +
+                    ") * 100, 4) as DISTANCE " +
                     "from WIFI_INFO " +
                     "order by DISTANCE " +
                     "limit 20;";
 
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setDouble(1, lat);
-            preparedStatement.setDouble(2, lnt);
-            preparedStatement.setDouble(3, lat);
-
-            // 쿼리 실행
             rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
@@ -223,14 +218,7 @@ public class SaveInfo {
                 preparedStatement.setString(15, jsonObject.get("LNT").getAsString());
                 preparedStatement.setString(16, jsonObject.get("WORK_DTTM").getAsString());
 
-                // 쿼리 실행
-                int affectedRows = preparedStatement.executeUpdate();
-
-                if (affectedRows > 0) {
-                    System.out.println("success");
-                } else {
-                    System.out.println("fail");
-                }
+                preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
