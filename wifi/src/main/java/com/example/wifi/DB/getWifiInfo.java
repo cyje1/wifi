@@ -1,4 +1,4 @@
-package com.example.wifi;
+package com.example.wifi.DB;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -56,7 +56,7 @@ public class getWifiInfo {
                             .getAsJsonObject().get("row")
                             .getAsJsonArray();
 
-                    SaveInfo saveInfo = new SaveInfo();
+                    ConnectDB saveInfo = new ConnectDB();
                     saveInfo.dbInsert(jsonArray);
                 }
 

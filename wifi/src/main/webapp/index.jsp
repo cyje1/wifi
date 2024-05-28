@@ -1,5 +1,5 @@
-<%@ page import="com.example.wifi.SaveInfo" %>
-<%@ page import="com.example.wifi.WifiDto" %>
+<%@ page import="com.example.wifi.DB.ConnectDB" %>
+<%@ page import="com.example.wifi.Dto.WifiDto" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
@@ -33,7 +33,7 @@
     <h1><%= "와이파이 정보 구하기" %></h1>
 
     <a href="/wifi_war_exploded">홈 |</a>
-    <a href="history">위치 히스토리 목록 |</a>
+    <a href="/wifi_war_exploded/history.jsp">위치 히스토리 목록 |</a>
     <a href="/wifi_war_exploded/load-wifi.jsp">Open API 와이파이 정보 가져오기</a>
 
     <br/>
@@ -133,8 +133,8 @@
 
 
                         if (latitude != 0 && longitude != 0) {
-                            SaveInfo saveInfo = new SaveInfo();
-                            List<WifiDto> list = saveInfo.dbSelectWithLocation(latitude, longitude);
+                            ConnectDB connectDB = new ConnectDB();
+                            List<WifiDto> list = connectDB.dbSelectWithLocation(latitude, longitude);
 
                             for (int i = 0; i < list.size(); i++) {
                     %>

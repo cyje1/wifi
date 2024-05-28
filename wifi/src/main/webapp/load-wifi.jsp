@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.example.wifi.getWifiInfo" %>
+<%@ page import="com.example.wifi.DB.getWifiInfo" %>
 <html>
 <head>
     <title>와이파이 정보 가져오기</title>

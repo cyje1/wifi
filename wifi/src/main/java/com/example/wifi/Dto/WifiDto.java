@@ -1,4 +1,4 @@
-package com.example.wifi;
+package com.example.wifi.Dto;
 
 public class WifiDto {
     private double distance;

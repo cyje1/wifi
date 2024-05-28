@@ -1,5 +1,7 @@
-package com.example.wifi;
+package com.example.wifi.DB;
 
+import com.example.wifi.Dto.HistoryDto;
+import com.example.wifi.Dto.WifiDto;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -7,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SaveInfo {
+public class ConnectDB {
     private String URL = "jdbc:mariadb://52.79.72.162:3306/wifi";
     private String USER_ID = "wifiuser";
     private String PASSWORD = "zerobase";
@@ -16,8 +18,8 @@ public class SaveInfo {
     private PreparedStatement preparedStatement = null;
     private ResultSet rs = null;
 
-    public List<WifiDto> dbSelect() {
-        List<WifiDto> list = new ArrayList<>();
+    public List<HistoryDto> selectHistory() {
+        List<HistoryDto> list = new ArrayList<>();
 
         try {
             Class.forName("org.mariadb.jdbc.Driver");
@@ -26,43 +28,21 @@ public class SaveInfo {
         }
 
         try {
-            // 커넥션 객체 생성
             connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
 
-            // preparedStatement 객체 생성
-            String sql = "select MGR_NO, GU, NAME, ADDRESS, DETAIL_ADDRESS, FLOORS , INSTALL_TYPE, " +
-                    "ORGANIZATION, SERVICE, WIFI_TYPE, INSTALLED_YEAR, IN_OUT, ENVIRON , Y , X , INSTALL_DATE " +
-                    "from WIFI_INFO; ";
-
+            String sql = "select * from HISTORY; ";
             preparedStatement = connection.prepareStatement(sql);
-
-            // 쿼리 실행
             rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                WifiDto wifiDto = new WifiDto();
+                HistoryDto historyDto = new HistoryDto();
 
-                wifiDto.setNo(rs.getString("MGR_NO"));
-                wifiDto.setGu(rs.getString("GU"));
-                wifiDto.setName(rs.getString("NAME"));
-                wifiDto.setAddress(rs.getString("ADDRESS"));
-                wifiDto.setDetailAddress(rs.getString("DETAIL_ADDRESS"));
+                historyDto.setId(rs.getInt("ID"));
+                historyDto.setX(rs.getString("X"));
+                historyDto.setY(rs.getString("Y"));
+                historyDto.setDate(rs.getTimestamp("SAVED_DATE").toLocalDateTime());
 
-                wifiDto.setFloors(rs.getString("FLOORS"));
-                wifiDto.setInstallType(rs.getString("INSTALL_TYPE"));
-                wifiDto.setOrganization(rs.getString("ORGANIZATION"));
-                wifiDto.setService(rs.getString("SERVICE"));
-                wifiDto.setWifiType(rs.getString("WIFI_TYPE"));
-
-                wifiDto.setInstalledYear(rs.getString("INSTALLED_YEAR"));
-                wifiDto.setInOut(rs.getString("IN_OUT"));
-                wifiDto.setEnviron(rs.getString("ENVIRON"));
-                wifiDto.setY(rs.getString("Y"));
-                wifiDto.setX(rs.getString("X"));
-
-                wifiDto.setInstallDate(rs.getString("INSTALL_DATE"));
-
-                list.add(wifiDto);
+                list.add(historyDto);
             }
 
         } catch (SQLException e) {
@@ -95,6 +75,52 @@ public class SaveInfo {
         }
 
         return list;
+    }
+
+    public void deleteHistory(int id) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "delete from HISTORY where id = ? ; ";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeQuery();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public List<WifiDto> dbSelectWithLocation(double lat, double lnt) {
@@ -149,6 +175,16 @@ public class SaveInfo {
 
                 list.add(wifiDto);
             }
+
+            // 히스토리 저장
+            sql = "insert into HISTORY (X, Y, SAVED_DATE) values ( ? , ? , now());";
+
+
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, String.valueOf(lat));
+            preparedStatement.setString(2, String.valueOf(lnt));
+
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
