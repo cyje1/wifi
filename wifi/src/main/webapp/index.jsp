@@ -2,6 +2,7 @@
 <%@ page import="com.example.wifi.WifiDto" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,16 +10,27 @@
     <style>
         table{
             width: 100%;
+            border-collapse: collapse;
         }
         th, td {
-            border:solid 1px #000;
+            border: 1px solid black;
+            padding: 6px;
             text-align: center;
+        }
+        thead th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff;
         }
     </style>
 </head>
 <body>
-    <h1><%= "와이파이 정보 구하기" %>
-    </h1>
+    <h1><%= "와이파이 정보 구하기" %></h1>
 
     <a href="/wifi_war_exploded">홈 |</a>
     <a href="history">위치 히스토리 목록 |</a>
@@ -27,12 +39,13 @@
     <br/>
     <br/>
 
-    <label for="lat"> Latitude : </label>
-    <input type="text" id="lat" name="lat">
-    <label for="lnt">Latitude:</label> LNT :
-    <input type="text" id="lnt" name="lnt">
-    <button onclick="getLocation()"> 내 위치 가져오기</button>
-    <button onclick="sendLocation()"> 내 위치 가져오기</button>
+    <label for="latitude"> Latitude : </label>
+    <input type="text" id="latitude" name="latitude">
+    <label for="longitude"> Longitude:</label>
+    <input type="text" id="longitude" name="longitude">
+
+    <button onclick="getLocation()"> 내 위치 가져오기 </button>
+    <button onclick="sendLocation()"> 근처 WIFI 정보 보기 </button>
 
     <p id="message"></p>
 
@@ -48,20 +61,45 @@
     function showPosition(position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
-        document.getElementById("lat").value = latitude;
-        document.getElementById("lnt").value = longitude;
+        document.getElementById("latitude").value = latitude;
+        document.getElementById("longitude").value = longitude;
     }
 
     function sendLocation() {
-        var lat = document.getElementById("lat").value;
-        var lnt = document.getElementById("lnt").value;
-        if (lat && lnt) {
-            var url = `http://localhost:8080/submit?latitude=${lat}&longitude=${lnt}`;
+        var latitude = document.getElementById("latitude").value;
+        var longitude = document.getElementById("longitude").value;
+
+        if (latitude && longitude) {
+            var url = "http://localhost:8080/wifi_war_exploded/?latitude="
+                + latitude + "&longitude=" + longitude;
             window.location.href = url;
         } else {
             document.getElementById("message").innerHTML = "좌표를 입력해주시기 바랍니다.";
         }
     }
+
+    function initializeFields() {
+        var latitude = getUrlParameter('latitude') || 0.0;
+        var longitude = getUrlParameter('longitude') || 0.0;
+
+        if (latitude == 0 || longitude == 0) {
+            document.getElementById('latitude').value = "0.0";
+            document.getElementById('longitude').value = "0.0";
+        } else {
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
+        }
+    }
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+
+    window.onload = initializeFields;
 </script>
     <div>
         <table>
@@ -87,14 +125,21 @@
                 </tr>
             </thead>
             <tbody>
-                    <%  SaveInfo saveInfo = new SaveInfo();
-                        List<WifiDto> list = saveInfo.dbSelect();
+                    <%
+                        Double latitude = request.getParameter("latitude") == null ?
+                                0 : Double.parseDouble(request.getParameter("latitude"));
+                        Double longitude = request.getParameter("longitude") == null ?
+                                0 : Double.parseDouble(request.getParameter("longitude"));
 
-                        if (list.size() > 0) {
+
+                        if (latitude != 0 && longitude != 0) {
+                            SaveInfo saveInfo = new SaveInfo();
+                            List<WifiDto> list = saveInfo.dbSelectWithLocation(latitude, longitude);
+
                             for (int i = 0; i < list.size(); i++) {
                     %>
                 <tr>
-                    <td> 거리 구해서 넣기 </td>
+                    <td> <%= list.get(i).getDistance() %> </td>
                     <td> <%= list.get(i).getNo() %> </td>
                     <td> <%= list.get(i).getGu() %>  </td>
                     <td> <%= list.get(i).getName() %>  </td>
@@ -124,53 +169,5 @@
             </tbody>
         </table>
     </div>
-<%--<script>--%>
-<%--    let list = [--%>
-<%--        {name: "망원한강공원1", addr: "마포구", latitude: 37.552788, longitude: 126.89939},--%>
-<%--        {name: "망원한강공원2", addr: "마포구", latitude: 37.552345, longitude: 126.89989},--%>
-<%--    ]--%>
-
-<%--    function getDistance(lat1, lon1, lat2, lon2) {--%>
-<%--        var radlat1 = Math.PI * lat1 / 180;--%>
-<%--        var radlat2 = Math.PI * lat2 / 180;--%>
-<%--        var theta = lon1 - lon2;--%>
-<%--        var radtheta = Math.PI * theta / 180;--%>
-<%--        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);--%>
-
-<%--        dist = Math.acos(dist);--%>
-<%--        dist = dist * 180 / Math.PI;--%>
-<%--        dist = dist * 60 * 1.1515;--%>
-<%--        dist = dist * 1.609344--%>
-
-<%--        return dist;--%>
-<%--    }--%>
-
-<%--    navigator.geolocation.getCurrentPosition((position) => {--%>
-<%--        let latitude = position.coords.latitude;--%>
-<%--        let longitude = position.coords.longitude;--%>
-
-<%--        console.log('latitude', latitude);--%>
-<%--        console.log('longitude', longitude);--%>
-
-<%--        for (let i = 0; i < list.length; i++) {--%>
-<%--            let distance = getDistance(latitude, longitude, list[i].latitude, list[i].longitude);--%>
-<%--            list[i].distance = distance;--%>
-<%--        }--%>
-
-<%--        let newList = list.sort(function (a, b) {--%>
-<%--            if (a.distance > b.distance) {--%>
-<%--                return 1;--%>
-<%--            }--%>
-
-<%--            if (a.distance < b.distance) {--%>
-<%--                return -1;--%>
-<%--            }--%>
-<%--        });--%>
-
-<%--        console.log(newList);--%>
-<%--    }, (err) => {--%>
-
-<%--    });--%>
-<%--</script>--%>
 </body>
 </html>

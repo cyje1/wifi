@@ -97,6 +97,96 @@ public class SaveInfo {
         return list;
     }
 
+    public List<WifiDto> dbSelectWithLocation(double lat, double lnt) {
+        List<WifiDto> list = new ArrayList<>();
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            // 커넥션 객체 생성
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            // preparedStatement 객체 생성
+            String sql
+                    = "select *, " +
+                    "(6371 * acos( cos( radians( ? ) ) * cos( radians(" + lat +" ) ) * cos( radians(" + lnt + ") - radians( ? ) ) + " +
+                    "sin( radians( ? ) ) * sin( radians(" + lat + ") ) ) ) AS DISTANCE " +
+                    "from WIFI_INFO " +
+                    "order by DISTANCE " +
+                    "limit 20;";
+
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1, lat);
+            preparedStatement.setDouble(2, lnt);
+            preparedStatement.setDouble(3, lat);
+
+            // 쿼리 실행
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                WifiDto wifiDto = new WifiDto();
+
+                wifiDto.setDistance(rs.getDouble("DISTANCE"));
+
+                wifiDto.setNo(rs.getString("MGR_NO"));
+                wifiDto.setGu(rs.getString("GU"));
+                wifiDto.setName(rs.getString("NAME"));
+                wifiDto.setAddress(rs.getString("ADDRESS"));
+                wifiDto.setDetailAddress(rs.getString("DETAIL_ADDRESS"));
+
+                wifiDto.setFloors(rs.getString("FLOORS"));
+                wifiDto.setInstallType(rs.getString("INSTALL_TYPE"));
+                wifiDto.setOrganization(rs.getString("ORGANIZATION"));
+                wifiDto.setService(rs.getString("SERVICE"));
+                wifiDto.setWifiType(rs.getString("WIFI_TYPE"));
+
+                wifiDto.setInstalledYear(rs.getString("INSTALLED_YEAR"));
+                wifiDto.setInOut(rs.getString("IN_OUT"));
+                wifiDto.setEnviron(rs.getString("ENVIRON"));
+                wifiDto.setY(rs.getString("Y"));
+                wifiDto.setX(rs.getString("X"));
+
+                wifiDto.setInstallDate(rs.getString("INSTALL_DATE"));
+
+                list.add(wifiDto);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+    }
+
     public void dbInsert(JsonArray jsonArray) {
         try {
             Class.forName("org.mariadb.jdbc.Driver");

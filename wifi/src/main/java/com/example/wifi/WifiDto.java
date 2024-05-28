@@ -1,6 +1,7 @@
 package com.example.wifi;
 
 public class WifiDto {
+    private double distance;
     private String no;
     private String gu;
     private String name;
@@ -18,6 +19,9 @@ public class WifiDto {
     private String x;
     private String installDate;
 
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
     public void setNo(String no) {
         this.no = no;
     }
@@ -80,6 +84,10 @@ public class WifiDto {
 
     public void setInstallDate(String installDate) {
         this.installDate = installDate;
+    }
+
+    public double getDistance() {
+        return distance;
     }
 
     public String getNo() {
