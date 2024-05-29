@@ -1,5 +1,6 @@
 package com.example.wifi.DB;
 
+import com.example.wifi.Dto.BookmarkDto;
 import com.example.wifi.Dto.HistoryDto;
 import com.example.wifi.Dto.WifiDto;
 import com.google.gson.JsonArray;
@@ -294,7 +295,7 @@ public class ConnectDB {
         return list;
     }
 
-    public void dbInsert(JsonArray jsonArray) {
+    public void saveWifi(JsonArray jsonArray) {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -354,5 +355,103 @@ public class ConnectDB {
         }
     }
 
+    public void saveBookmark(String name, int order) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "insert into BOOKMARK (NAME, NUMBER, REGISTERED_DATE) values ( ? , ? , now()); ";
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, order);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<BookmarkDto> selectBookmark() {
+        List<BookmarkDto> list = new ArrayList<>();
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "select * from BOOKMARK ORDER BY NUMBER; ";
+            preparedStatement = connection.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                BookmarkDto bookmarkDto = new BookmarkDto();
+
+                bookmarkDto.setId(rs.getInt("ID"));
+                bookmarkDto.setName(rs.getString("NAME"));
+                bookmarkDto.setOrder(rs.getInt("NUMBER"));
+                bookmarkDto.setRegisteredDate(rs.getTimestamp("REGISTERED_DATE").toLocalDateTime());
+                if (rs.getTimestamp("UPDATED_DATE") != null) {
+                    bookmarkDto.setUpdatedDate(rs.getTimestamp("UPDATED_DATE").toLocalDateTime());
+                }
+                list.add(bookmarkDto);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+    }
 }
