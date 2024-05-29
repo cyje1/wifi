@@ -123,6 +123,82 @@ public class ConnectDB {
 
     }
 
+    public WifiDto selectWifiWithNo(String no, double lat, double lnt) {
+        WifiDto wifiDto = new WifiDto();
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "select *, round(ST_DISTANCE(" +
+                    " point( Y , X ), " +
+                    " point(" + lat + ", " + lnt + ") " +
+                    ") * 100, 4) as DISTANCE " +
+                    "from WIFI_INFO WHERE MGR_NO = ? ;";
+
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, no);
+            rs = preparedStatement.executeQuery();
+
+            rs.next();
+            wifiDto.setDistance(rs.getDouble("DISTANCE"));
+
+            wifiDto.setNo(rs.getString("MGR_NO"));
+            wifiDto.setGu(rs.getString("GU"));
+            wifiDto.setName(rs.getString("NAME"));
+            wifiDto.setAddress(rs.getString("ADDRESS"));
+            wifiDto.setDetailAddress(rs.getString("DETAIL_ADDRESS"));
+
+            wifiDto.setFloors(rs.getString("FLOORS"));
+            wifiDto.setInstallType(rs.getString("INSTALL_TYPE"));
+            wifiDto.setOrganization(rs.getString("ORGANIZATION"));
+            wifiDto.setService(rs.getString("SERVICE"));
+            wifiDto.setWifiType(rs.getString("WIFI_TYPE"));
+
+            wifiDto.setInstalledYear(rs.getString("INSTALLED_YEAR"));
+            wifiDto.setInOut(rs.getString("IN_OUT"));
+            wifiDto.setEnviron(rs.getString("ENVIRON"));
+            wifiDto.setY(rs.getString("Y"));
+            wifiDto.setX(rs.getString("X"));
+
+            wifiDto.setInstallDate(rs.getString("INSTALL_DATE"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return wifiDto;
+    }
+
     public List<WifiDto> dbSelectWithLocation(double lat, double lnt) {
         List<WifiDto> list = new ArrayList<>();
 

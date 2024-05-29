@@ -141,8 +141,9 @@
                 <tr>
                     <td> <%= list.get(i).getDistance() %> </td>
                     <td> <%= list.get(i).getNo() %> </td>
-                    <td> <%= list.get(i).getGu() %>  </td>
-                    <td> <%= list.get(i).getName() %>  </td>
+                    <td> <%= list.get(i).getGu() %> </td>
+                    <td> <a href="/wifi_war_exploded/detail.jsp?mgrNo=<%=list.get(i).getNo()%>&lat=<%=latitude%>&lnt=<%=longitude%>">
+                        <%= list.get(i).getName() %> </a> </td>
                     <td> <%= list.get(i).getAddress() %> </td>
                     <td> <%= list.get(i).getDetailAddress() %> </td>
                     <td> <%= list.get(i).getFloors() %> </td>

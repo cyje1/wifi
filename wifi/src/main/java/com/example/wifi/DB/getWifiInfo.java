@@ -56,8 +56,8 @@ public class getWifiInfo {
                             .getAsJsonObject().get("row")
                             .getAsJsonArray();
 
-                    ConnectDB saveInfo = new ConnectDB();
-                    saveInfo.dbInsert(jsonArray);
+                    ConnectDB connectDB = new ConnectDB();
+                    connectDB.dbInsert(jsonArray);
                 }
 
                 if (end == count) {
