@@ -19,5 +19,16 @@
     <a href="/wifi_war_exploded/bookmark-list.jsp">북마크 보기 |</a>
     <a href="/wifi_war_exploded/bookmark-group.jsp">북마크 그룹 관리</a>
 
+    <br/>
+    <br/>
+
+    <button type="button" onclick="addBookmark()">북마크 그룹 이름 추가</button>
+
+    <script>
+        function addBookmark() {
+            window.location.href = "http://localhost:8080/wifi_war_exploded/bookmark-group-add.jsp";
+        }
+    </script>
+
 </body>
 </html>

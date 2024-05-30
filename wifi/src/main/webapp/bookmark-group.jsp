@@ -81,7 +81,8 @@
                     <td> </td>
                     <% }%>
                     
-                    <td>삭제</td>
+                    <td><a href="/wifi_war_exploded/bookmark-group-edit.jsp?id=<%=list.get(i).getId()%>&name=<%=list.get(i).getName()%>&order=<%=list.get(i).getOrder()%>">수정</a>
+                        <a href="/wifi_war_exploded/bookmark-group-delete.jsp?id=<%=list.get(i).getId()%>&name=<%=list.get(i).getName()%>&order=<%=list.get(i).getOrder()%>">삭제</a></td>
                 </tr>
                     <%   } } else {    %>
                 <td colspan="20">
@@ -94,6 +95,7 @@
             </tbody>
         </table>
     </div>
+
     <script>
     function addBookmark() {
         window.location.href = "http://localhost:8080/wifi_war_exploded/bookmark-group-add.jsp";

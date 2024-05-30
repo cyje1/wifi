@@ -11,7 +11,7 @@
     <title>와이파이 정보 구하기</title>
     <style>
         table {
-            width: 50%;
+            width: 100%;
             border-collapse: collapse;
             margin: 20px 0; /* 좌우 여백 제거하여 왼쪽 정렬 */
         }
@@ -40,18 +40,9 @@
             box-sizing: border-box;
         }
         .form-container {
-            text-align: left; /* 버튼을 왼쪽으로 정렬 */
+            text-align: center; /* 버튼을 왼쪽으로 정렬 */
         }
-        .form-container button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .form-container button:hover {
-            background-color: #45a049;
-        }
+
     </style>
 </head>
 <body>
@@ -75,13 +66,13 @@
             <td><input type="text" id="order" name="order"></td>
         </tr>
     </table>
+
     <div class="form-container">
         <button type="button" onclick="addBookmark()">추가</button>
     </div>
 
     <script>
         function addBookmark() {
-            // 여기에 추가 기능을 구현할 수 있습니다.
             const bookmarkName = document.getElementById('bookmarkName').value;
             const order = document.getElementById('order').value;
 
