@@ -1,6 +1,7 @@
 package com.example.wifi.DB;
 
 import com.example.wifi.Dto.BookmarkDto;
+import com.example.wifi.Dto.BookmarkListDto;
 import com.example.wifi.Dto.HistoryDto;
 import com.example.wifi.Dto.WifiDto;
 import com.google.gson.JsonArray;
@@ -522,6 +523,209 @@ public class ConnectDB {
                 e.printStackTrace();
             }
 
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<BookmarkListDto> selectBookmarkList() {
+        List<BookmarkListDto> list = new ArrayList<>();
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "select * from BOOKMARK_LIST; ";
+            preparedStatement = connection.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                BookmarkListDto bookmarkListDto = new BookmarkListDto();
+
+                bookmarkListDto.setId(rs.getInt("ID"));
+                bookmarkListDto.setBookmarkName(rs.getString("BOOKMARK_NAME"));
+                bookmarkListDto.setWifiName(rs.getString("WIFI_NAME"));
+                bookmarkListDto.setRegisteredDate(rs.getTimestamp("REGISTERED_DATE").toLocalDateTime());
+
+                list.add(bookmarkListDto);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+    }
+
+    public BookmarkListDto selectBookmarkListWithId(int id, String wifiName) {
+        BookmarkListDto bookmarkListDto = new BookmarkListDto();
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "select * from BOOKMARK_LIST where id = ? and WIFI_NAME = ?; ";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, wifiName);
+            rs = preparedStatement.executeQuery();
+
+            rs.next();
+            bookmarkListDto.setId(rs.getInt("ID"));
+            bookmarkListDto.setBookmarkName(rs.getString("BOOKMARK_NAME"));
+            bookmarkListDto.setWifiName(rs.getString("WIFI_NAME"));
+            bookmarkListDto.setRegisteredDate(rs.getTimestamp("REGISTERED_DATE").toLocalDateTime());
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bookmarkListDto;
+    }
+
+    public void deleteBookmarkList(int id, String wifiName) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "delete from BOOKMARK_LIST where id = ? and WIFI_NAME = ?; ";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, wifiName);
+            preparedStatement.executeQuery();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.isClosed();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addToBookmark(int bookmarkId, String bookmarkName, String wifiName) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+
+            String sql = "insert into BOOKMARK_LIST (ID, BOOKMARK_NAME, WIFI_NAME, REGISTERED_DATE) " +
+                    "values ( ? , ? , ? , now()); ";
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, bookmarkId);
+            preparedStatement.setString(2, bookmarkName);
+            preparedStatement.setString(3, wifiName);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
                 if (preparedStatement != null && !preparedStatement.isClosed()) {
                     preparedStatement.close();
