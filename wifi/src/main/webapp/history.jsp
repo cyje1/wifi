@@ -70,7 +70,7 @@
                     <td> <%= list.get(i).getX() %> </td>
                     <td> <%= list.get(i).getY() %> </td>
                     <td> <%= list.get(i).getDate() %> </td>
-                    <td> <a href="/wifi_war_exploded/delete-history.jsp?id=<%=list.get(i).getId()%>"> 삭제 </a> </td>
+                    <td> <a href="/wifi_war_exploded/history-delete.jsp?id=<%=list.get(i).getId()%>"> 삭제 </a> </td>
                 </tr>
                     <% } %>
             </tbody>

@@ -76,7 +76,7 @@
             const bookmarkName = document.getElementById('bookmarkName').value;
             const order = document.getElementById('order').value;
 
-            window.location.href = "http://localhost:8080/wifi_war_exploded/bookmark-group-submit.jsp" +
+            window.location.href = "http://localhost:8080/wifi_war_exploded/bookmark-group-add-submit.jsp" +
                 "?name=" + bookmarkName + "&order=" + order;
         }
     </script>

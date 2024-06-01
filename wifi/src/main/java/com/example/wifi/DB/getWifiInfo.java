@@ -36,10 +36,9 @@ public class getWifiInfo {
     }
 
     public static void getWifiData() throws IOException {
-//        int count = getTotalCount();
-        int count = 10;
+        int count = getTotalCount();
         int start = 1;
-        int end = 10;
+        int end = 1000;
 
         OkHttpClient client = new OkHttpClient();
         ConnectDB connectDB = new ConnectDB();
@@ -48,6 +47,7 @@ public class getWifiInfo {
             while (true) {
                 Request request = new Request.Builder().url(URL + start + "/" + end).build();
                 Response response = client.newCall(request).execute();
+                System.out.println(start + " / " + end);
 
                 if (response.isSuccessful()) {
                     String responseData = response.body().string();

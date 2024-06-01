@@ -29,16 +29,18 @@ public class ConnectDB {
 
         try {
             connection = DriverManager.getConnection(URL, USER_ID, PASSWORD);
+            connection.setAutoCommit(false);
+
+            String sql = "insert into WIFI_INFO " +
+                    "(MGR_NO, GU, NAME, ADDRESS, DETAIL_ADDRESS, FLOORS , INSTALL_TYPE, " +
+                    "ORGANIZATION, SERVICE, WIFI_TYPE, INSTALLED_YEAR, IN_OUT, ENVIRON , Y , X , INSTALL_DATE) " +
+                    "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );";
+
+            preparedStatement = connection.prepareStatement(sql);
 
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
 
-                String sql = "insert into WIFI_INFO " +
-                        "(MGR_NO, GU, NAME, ADDRESS, DETAIL_ADDRESS, FLOORS , INSTALL_TYPE, " +
-                        "ORGANIZATION, SERVICE, WIFI_TYPE, INSTALLED_YEAR, IN_OUT, ENVIRON , Y , X , INSTALL_DATE) " +
-                        "values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );";
-
-                preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, jsonObject.get("X_SWIFI_MGR_NO").getAsString());
                 preparedStatement.setString(2, jsonObject.get("X_SWIFI_WRDOFC").getAsString());
                 preparedStatement.setString(3, jsonObject.get("X_SWIFI_MAIN_NM").getAsString());
@@ -56,8 +58,10 @@ public class ConnectDB {
                 preparedStatement.setString(15, jsonObject.get("LNT").getAsString());
                 preparedStatement.setString(16, jsonObject.get("WORK_DTTM").getAsString());
 
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
