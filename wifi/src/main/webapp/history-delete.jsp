@@ -21,10 +21,19 @@
     <%
        String id = request.getParameter("id");
 
-        ConnectDB connectDB = new ConnectDB();
-        connectDB.deleteHistory(Integer.parseInt(id));
+       ConnectDB connectDB = new ConnectDB();
+       connectDB.deleteHistory(Integer.parseInt(id));
     %>
-    <p> <%=id%>번 히스토리 삭제가 완료 되었습니다. </p>
+
+    <script>
+        window.onload = deleteHistory;
+
+        function deleteHistory() {
+            alert('<%=id%>번 히스토리를 삭제하였습니다.');
+            window.location.href = "http://localhost:8080/wifi_war_exploded/history.jsp";
+        }
+
+    </script>
 
 </body>
 </html>

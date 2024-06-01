@@ -13,7 +13,7 @@
             border-collapse: collapse;
         }
         th, td {
-            border: 1px solid black;
+            border: 1px solid lightgray;
             padding: 6px;
             text-align: center;
         }
@@ -49,7 +49,8 @@
     <button onclick="getLocation()"> 내 위치 가져오기 </button>
     <button onclick="sendLocation()"> 근처 WIFI 정보 보기 </button>
 
-    <p id="message"></p>
+    <br/>
+    <br/>
 
 <script>
     function getLocation() {
@@ -71,12 +72,12 @@
         var latitude = document.getElementById("latitude").value;
         var longitude = document.getElementById("longitude").value;
 
-        if (latitude && longitude) {
+        if (latitude != "0.0" && longitude != "0.0") {
             var url = "http://localhost:8080/wifi_war_exploded/?latitude="
                 + latitude + "&longitude=" + longitude;
             window.location.href = url;
         } else {
-            document.getElementById("message").innerHTML = "좌표를 입력해주시기 바랍니다.";
+            alert("좌표를 입력해주시기 바랍니다.");
         }
     }
 
@@ -99,7 +100,6 @@
         var results = regex.exec(location.search);
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
-
 
     window.onload = initializeFields;
 </script>
@@ -136,7 +136,7 @@
 
                         if (latitude != 0 && longitude != 0) {
                             ConnectDB connectDB = new ConnectDB();
-                            List<WifiDto> list = connectDB.dbSelectWithLocation(latitude, longitude);
+                            List<WifiDto> list = connectDB.selectWifiWithLocation(latitude, longitude);
 
                             for (int i = 0; i < list.size(); i++) {
                     %>

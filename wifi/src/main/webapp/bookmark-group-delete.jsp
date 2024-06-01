@@ -13,10 +13,10 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0; /* 상하 여백만 남기고 좌우 여백 제거 */
+            margin: 20px 0;
         }
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid lightgray;
             padding: 8px;
             text-align: left;
         }
@@ -55,7 +55,6 @@
     <br/>
 
     <p>북마크 그룹을 삭제하시겠습니까?</p>
-    <br/>
 
     <% int id = Integer.parseInt(request.getParameter("id")); %>
 

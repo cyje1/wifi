@@ -17,7 +17,7 @@
             border-collapse: collapse;
         }
         th, td {
-            border: 1px solid black;
+            border: 1px solid lightgray;
             padding: 6px;
             text-align: center;
         }

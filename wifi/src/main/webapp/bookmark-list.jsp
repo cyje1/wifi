@@ -10,14 +10,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title> 북마크 목록 </title>
+    <title> 와이파이 정보 구하기 </title>
     <style>
         table{
             width: 100%;
             border-collapse: collapse;
         }
         th, td {
-            border: 1px solid black;
+            border: 1px solid lightgray;
             padding: 6px;
             text-align: center;
         }

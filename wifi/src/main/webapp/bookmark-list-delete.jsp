@@ -68,10 +68,6 @@
 
     <table>
         <tr>
-            <td>ID</td>
-            <td><%=bookmarkListDto.getId()%></td>
-        </tr>
-        <tr>
             <td>북마크 이름</td>
             <td><%=bookmarkListDto.getBookmarkName()%></td>
         </tr>

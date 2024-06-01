@@ -42,6 +42,7 @@ public class getWifiInfo {
         int end = 10;
 
         OkHttpClient client = new OkHttpClient();
+        ConnectDB connectDB = new ConnectDB();
 
         try {
             while (true) {
@@ -56,7 +57,6 @@ public class getWifiInfo {
                             .getAsJsonObject().get("row")
                             .getAsJsonArray();
 
-                    ConnectDB connectDB = new ConnectDB();
                     connectDB.saveWifi(jsonArray);
                 }
 
